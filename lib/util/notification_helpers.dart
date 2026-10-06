@@ -9,6 +9,7 @@ import 'package:fladder/models/seerr_credentials_model.dart';
 import 'package:fladder/seerr/seerr_chopper_service.dart';
 import 'package:fladder/seerr/seerr_json_converter.dart';
 import 'package:fladder/seerr/seerr_models.dart';
+import 'package:fladder/util/http_client.dart';
 
 const String updateTaskName = 'nl.jknaapen.fladder.update_notifications_check';
 const String updateTaskNameDebug = 'nl.jknaapen.fladder.update_notifications_check_debug';
@@ -27,6 +28,7 @@ class NotificationHelpers {
   static SeerrChopperService createSeerrClient(SeerrCredentialsModel credentials) {
     final chopper = ChopperClient(
       baseUrl: Uri.parse(credentials.serverUrl),
+      client: createHttpClient(),
       converter: const SeerrJsonConverter(),
       interceptors: [
         _WorkerSeerrAuthInterceptor(
@@ -86,6 +88,7 @@ class NotificationHelpers {
       final lastUpdateDate = since;
 
       api = dto.JellyfinOpenApi.create(
+        httpClient: createHttpClient(),
         baseUrl: Uri.parse(trimmed),
         interceptors: [
           _WorkerAuthInterceptor(token),
